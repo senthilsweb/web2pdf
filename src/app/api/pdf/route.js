@@ -1,5 +1,15 @@
-import puppeteer from "puppeteer";
+import chromium from "@sparticuz/chromium";
+import puppeteer from "puppeteer-core";
 import { NextResponse } from "next/server";
+
+const isValidUrl = (url) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
@@ -8,7 +18,8 @@ export async function GET(req) {
   const footer = searchParams.get("footer");
   const pageNumbers = searchParams.get("pageNumbers") === "true";
 
-  if (!url) {
+  // Validate the URL parameter
+  if (!url || !isValidUrl(url)) {
     return NextResponse.json(
       { error: "Invalid or missing 'url' parameter" },
       { status: 400 }
@@ -16,19 +27,11 @@ export async function GET(req) {
   }
 
   try {
+    // Launch Puppeteer with @sparticuz/chromium
     const browser = await puppeteer.launch({
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--single-process",
-        "--no-zygote",
-      ],
-      headless: true,
-      executablePath: "/tmp/chromium",
-      env: {
-        PUPPETEER_CACHE_DIR: "/tmp",
-      },
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: chromium.headless,
     });
 
     const page = await browser.newPage();

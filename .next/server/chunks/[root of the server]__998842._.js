@@ -40,6 +40,14 @@ const mod = __turbopack_external_require__("next/dist/server/app-render/work-asy
 
 module.exports = mod;
 }}),
+"[externals]/@sparticuz/chromium [external] (@sparticuz/chromium, cjs)": (function(__turbopack_context__) {
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, x: __turbopack_external_require__, y: __turbopack_external_import__, m: module, e: exports, t: __turbopack_require_real__ } = __turbopack_context__;
+{
+const mod = __turbopack_external_require__("@sparticuz/chromium", () => require("@sparticuz/chromium"));
+
+module.exports = mod;
+}}),
 "[externals]/puppeteer-core [external] (puppeteer-core, esm_import)": ((__turbopack_context__) => {
 "use strict";
 
@@ -66,6 +74,7 @@ __turbopack_async_module__(async (__turbopack_handle_async_dependencies__, __tur
 __turbopack_esm__({
     "GET": (()=>GET)
 });
+var __TURBOPACK__imported__module__$5b$externals$5d2f40$sparticuz$2f$chromium__$5b$external$5d$__$2840$sparticuz$2f$chromium$2c$__cjs$29$__ = __turbopack_import__("[externals]/@sparticuz/chromium [external] (@sparticuz/chromium, cjs)");
 var __TURBOPACK__imported__module__$5b$externals$5d2f$puppeteer$2d$core__$5b$external$5d$__$28$puppeteer$2d$core$2c$__esm_import$29$__ = __turbopack_import__("[externals]/puppeteer-core [external] (puppeteer-core, esm_import)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/server.js [app-route] (ecmascript)");
 var __turbopack_async_dependencies__ = __turbopack_handle_async_dependencies__([
@@ -74,7 +83,7 @@ var __turbopack_async_dependencies__ = __turbopack_handle_async_dependencies__([
 ([__TURBOPACK__imported__module__$5b$externals$5d2f$puppeteer$2d$core__$5b$external$5d$__$28$puppeteer$2d$core$2c$__esm_import$29$__] = __turbopack_async_dependencies__.then ? (await __turbopack_async_dependencies__)() : __turbopack_async_dependencies__);
 ;
 ;
-// Helper function to validate URLs
+;
 const isValidUrl = (url)=>{
     try {
         new URL(url);
@@ -98,44 +107,32 @@ async function GET(req) {
         });
     }
     try {
-        // Launch Puppeteer
+        // Launch Puppeteer with @sparticuz/chromium
         const browser = await __TURBOPACK__imported__module__$5b$externals$5d2f$puppeteer$2d$core__$5b$external$5d$__$28$puppeteer$2d$core$2c$__esm_import$29$__["default"].launch({
-            args: [
-                "--no-sandbox",
-                "--disable-setuid-sandbox"
-            ],
-            headless: true
+            args: __TURBOPACK__imported__module__$5b$externals$5d2f40$sparticuz$2f$chromium__$5b$external$5d$__$2840$sparticuz$2f$chromium$2c$__cjs$29$__["default"].args,
+            executablePath: await __TURBOPACK__imported__module__$5b$externals$5d2f40$sparticuz$2f$chromium__$5b$external$5d$__$2840$sparticuz$2f$chromium$2c$__cjs$29$__["default"].executablePath(),
+            headless: __TURBOPACK__imported__module__$5b$externals$5d2f40$sparticuz$2f$chromium__$5b$external$5d$__$2840$sparticuz$2f$chromium$2c$__cjs$29$__["default"].headless
         });
         const page = await browser.newPage();
         await page.goto(url, {
             waitUntil: "networkidle0"
         });
-        // Configure header and footer templates
-        const headerTemplate = header ? `
-        <div style="font-size:10px; text-align:center; width:100%;">
-          ${header}
-        </div>
-      ` : ""; // Empty if header is not required
-        const footerTemplate = footer || pageNumbers ? `
-        <div style="font-size:10px; text-align:center; width:100%; margin-top:10px;">
-          ${footer ? footer + " | " : ""}${pageNumbers ? 'Page <span class="pageNumber"></span> of <span class="totalPages"></span>' : ""}
-        </div>
-      ` : ""; // Empty if footer and page numbers are not required
-        // Generate PDF
+        const headerTemplate = header ? `<div style="font-size:10px; text-align:center;">${header}</div>` : "<span></span>";
+        const footerTemplate = footer || pageNumbers ? `<div style="font-size:10px; text-align:center;">${footer ? footer + " | " : ""}${pageNumbers ? 'Page <span class="pageNumber"></span> of <span class="totalPages"></span>' : ""}</div>` : "<span></span>";
         const pdfBuffer = await page.pdf({
             format: "A4",
             margin: {
-                top: "1in",
-                right: "1in",
-                bottom: "1in",
-                left: "1in"
+                top: header ? "1in" : "0.5in",
+                right: "0.5in",
+                bottom: footer || pageNumbers ? "1in" : "0.5in",
+                left: "0.5in"
             },
             displayHeaderFooter: !!header || !!footer || !!pageNumbers,
             headerTemplate,
-            footerTemplate
+            footerTemplate,
+            printBackground: true
         });
         await browser.close();
-        // Return the PDF as a response
         return new Response(pdfBuffer, {
             headers: {
                 "Content-Type": "application/pdf",
@@ -162,4 +159,4 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
 
 };
 
-//# sourceMappingURL=%5Broot%20of%20the%20server%5D__65fd62._.js.map
+//# sourceMappingURL=%5Broot%20of%20the%20server%5D__998842._.js.map
