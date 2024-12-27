@@ -13,11 +13,10 @@ __turbopack_async_module__(async (__turbopack_handle_async_dependencies__, __tur
 __turbopack_esm__({
     "GET": (()=>GET)
 });
-var __TURBOPACK__imported__module__$5b$externals$5d2f$puppeteer$2d$core__$5b$external$5d$__$28$puppeteer$2d$core$2c$__esm_import$29$__ = __turbopack_import__("[externals]/puppeteer-core [external] (puppeteer-core, esm_import)");
+var __TURBOPACK__imported__module__$5b$externals$5d2f$puppeteer__$5b$external$5d$__$28$puppeteer$2c$__esm_import$29$__ = __turbopack_import__("[externals]/puppeteer [external] (puppeteer, esm_import)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/server.js [app-route] (ecmascript)");
 ;
 ;
-// Helper function to validate URLs
 const isValidUrl = (url)=>{
     try {
         new URL(url);
@@ -41,8 +40,8 @@ async function GET(req) {
         });
     }
     try {
-        // Launch Puppeteer
-        const browser = await __TURBOPACK__imported__module__$5b$externals$5d2f$puppeteer$2d$core__$5b$external$5d$__$28$puppeteer$2d$core$2c$__esm_import$29$__["default"].launch({
+        // Launch Puppeteer with the bundled Chromium
+        const browser = await __TURBOPACK__imported__module__$5b$externals$5d2f$puppeteer__$5b$external$5d$__$28$puppeteer$2c$__esm_import$29$__["default"].launch({
             args: [
                 "--no-sandbox",
                 "--disable-setuid-sandbox"
@@ -53,18 +52,8 @@ async function GET(req) {
         await page.goto(url, {
             waitUntil: "networkidle0"
         });
-        // Configure header and footer templates
-        const headerTemplate = header ? `
-        <div style="font-size:10px; text-align:center; width:100%;">
-          ${header}
-        </div>
-      ` : ""; // Empty if header is not required
-        const footerTemplate = footer || pageNumbers ? `
-        <div style="font-size:10px; text-align:center; width:100%; margin-top:10px;">
-          ${footer ? footer + " | " : ""}${pageNumbers ? 'Page <span class="pageNumber"></span> of <span class="totalPages"></span>' : ""}
-        </div>
-      ` : ""; // Empty if footer and page numbers are not required
-        // Generate PDF
+        const headerTemplate = header ? `<div style="font-size:10px; text-align:center; width:100%;">${header}</div>` : "";
+        const footerTemplate = footer || pageNumbers ? `<div style="font-size:10px; text-align:center; width:100%; margin-top:10px;">${footer ? footer + " | " : ""}${pageNumbers ? 'Page <span class="pageNumber"></span> of <span class="totalPages"></span>' : ""}</div>` : "";
         const pdfBuffer = await page.pdf({
             format: "A4",
             margin: {
@@ -78,7 +67,6 @@ async function GET(req) {
             footerTemplate
         });
         await browser.close();
-        // Return the PDF as a response
         return new Response(pdfBuffer, {
             headers: {
                 "Content-Type": "application/pdf",

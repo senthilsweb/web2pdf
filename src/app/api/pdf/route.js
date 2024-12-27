@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import { NextResponse } from "next/server";
 
 const isValidUrl = (url) => {
@@ -26,46 +26,32 @@ export async function GET(req) {
   }
 
   try {
-    // Launch Puppeteer using Vercel's built-in Chromium
+    // Launch Puppeteer with the bundled Chromium
     const browser = await puppeteer.launch({
-      executablePath: "/usr/bin/google-chrome-stable",
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Required for serverless environments
       headless: true,
     });
 
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: "networkidle0" });
 
-    // Configure header and footer templates
     const headerTemplate = header
-      ? `
-        <div style="font-size:10px; text-align:center; width:100%;">
-          ${header}
-        </div>
-      `
-      : ""; // Empty if header is not required
+      ? `<div style="font-size:10px; text-align:center; width:100%;">${header}</div>`
+      : "";
 
     const footerTemplate = footer || pageNumbers
-      ? `
-        <div style="font-size:10px; text-align:center; width:100%; margin-top:10px;">
-          ${footer ? footer + " | " : ""}${
+      ? `<div style="font-size:10px; text-align:center; width:100%; margin-top:10px;">${
+          footer ? footer + " | " : ""
+        }${
           pageNumbers
             ? 'Page <span class="pageNumber"></span> of <span class="totalPages"></span>'
             : ""
-        }
-        </div>
-      `
-      : ""; // Empty if footer and page numbers are not required
+        }</div>`
+      : "";
 
-    // Generate PDF
     const pdfBuffer = await page.pdf({
       format: "A4",
-      margin: {
-        top: "1in",
-        right: "1in",
-        bottom: "1in",
-        left: "1in",
-      },
+      margin: { top: "1in", right: "1in", bottom: "1in", left: "1in" },
       displayHeaderFooter: !!header || !!footer || !!pageNumbers,
       headerTemplate,
       footerTemplate,
@@ -73,7 +59,6 @@ export async function GET(req) {
 
     await browser.close();
 
-    // Return the PDF as a response
     return new Response(pdfBuffer, {
       headers: {
         "Content-Type": "application/pdf",
