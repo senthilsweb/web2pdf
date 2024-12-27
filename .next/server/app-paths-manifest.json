@@ -1,4 +1,3 @@
 {
-  "/page": "app/page.js",
   "/api/pdf/route": "app/api/pdf/route.js"
 }
