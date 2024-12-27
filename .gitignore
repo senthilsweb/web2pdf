@@ -14,6 +14,7 @@ var
 # Dependency directories (remove the comment below to include it)
 # vendor/
 .temp
+.next
 .dist
 .DS_Store
 *.DS_Store
