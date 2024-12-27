@@ -1,0 +1,36 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+var
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+# Dependency directories (remove the comment below to include it)
+# vendor/
+.temp
+.dist
+.DS_Store
+*.DS_Store
+*.log
+*.gz
+templrjs
+hist.txt
+hist.txt
+history.txt
+.node_modules
+/node_modules
+.nuxt
+.output
+/.output
+/.nuxt
+.env
+/krakend/configs/krakend.json
+/krakend/configs/entrypoint.sh
+.vercel
+/db/*.md
