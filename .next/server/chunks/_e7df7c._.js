@@ -52,19 +52,21 @@ async function GET(req) {
         await page.goto(url, {
             waitUntil: "networkidle0"
         });
-        const headerTemplate = header ? `<div style="font-size:10px; text-align:center; width:100%;">${header}</div>` : "";
-        const footerTemplate = footer || pageNumbers ? `<div style="font-size:10px; text-align:center; width:100%; margin-top:10px;">${footer ? footer + " | " : ""}${pageNumbers ? 'Page <span class="pageNumber"></span> of <span class="totalPages"></span>' : ""}</div>` : "";
+        // Configure header and footer templates
+        const headerTemplate = header ? `<div style="font-size:10px; text-align:center;">${header}</div>` : "<span></span>"; // Empty but valid for Puppeteer
+        const footerTemplate = footer || pageNumbers ? `<div style="font-size:10px; text-align:center;">${footer ? footer + " | " : ""}${pageNumbers ? 'Page <span class="pageNumber"></span> of <span class="totalPages"></span>' : ""}</div>` : "<span></span>"; // Empty but valid for Puppeteer
         const pdfBuffer = await page.pdf({
             format: "A4",
             margin: {
-                top: "1in",
-                right: "1in",
-                bottom: "1in",
-                left: "1in"
+                top: header ? "1in" : "0.5in",
+                right: "0.5in",
+                bottom: footer || pageNumbers ? "1in" : "0.5in",
+                left: "0.5in"
             },
             displayHeaderFooter: !!header || !!footer || !!pageNumbers,
             headerTemplate,
-            footerTemplate
+            footerTemplate,
+            printBackground: true
         });
         await browser.close();
         return new Response(pdfBuffer, {
