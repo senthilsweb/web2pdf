@@ -84,7 +84,12 @@ For manual deployment or debugging, you can use the Vercel CLI:
 
 Try the API with the following example:
 
+**Example: 1**
 ```plaintext
+https://export2pdf.vercel.app/api/pdf?url=https://www.senthilsweb.com/cms/senthilnathan-karuppaiah?print=true&pageNumbers=true
+```
+**Example: 2**
+```
 https://export2pdf.vercel.app/api/pdf?url=https://www.senthilsweb.com/blog/using-makefiles-to-bundle-a-full-stack-app-into-a-go-binary?print=true&pageNumbers=true
 ```
 

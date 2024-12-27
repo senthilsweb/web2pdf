@@ -1,7 +1,7 @@
 /**
  * File Name: route.js
  * Author(s): Senthilnathan Karuppaiah and ChatGPT :-)
- * Date: 14-Mar-2024
+ * Date: 26-Dec-2024
  * 
  * Description: This API endpoint leverages Puppeteer to generate PDFs dynamically 
  * from given URLs. It supports optional headers, footers, and page numbering while 
